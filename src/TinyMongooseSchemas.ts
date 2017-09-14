@@ -1,14 +1,16 @@
 /// <reference types="tiny-promises" />
-import * as mongoose from 'mongoose';
+import { Document, Model, Schema, Mongoose, NativeError } from 'mongoose';
 
 class TinyMongooseSchemas<
   T,
-  DocType extends mongoose.Document,
-  ModelType extends mongoose.Model<DocType>
+  DocType extends Document,
+  ModelType extends Model<DocType>
 > {
-  private _schema: mongoose.Schema;
-  constructor(schema: mongoose.Schema) {
+  private _schema: Schema;
+  private _mongoose: Mongoose;
+  constructor(schema: Schema, mongoose: Mongoose) {
     this._schema = schema;
+    this._mongoose = mongoose;
     this.schema.pre('validate', function(next) {
       delete this.created_at;
       delete this.updated_at;
@@ -23,26 +25,26 @@ class TinyMongooseSchemas<
     this._schema.pre('findByIdAndUpdate', preUpdate);
     this._schema.pre('findOneAndUpdate', preUpdate);
   }
-  get schema(): mongoose.Schema {
+  get schema(): Schema {
     return this._schema;
   }
   public static from<
     T,
-    DocType extends mongoose.Document,
-    ModelType extends mongoose.Model<DocType>
-  >(fields: any): TinyMongooseSchemas<T, DocType, ModelType> {
+    DocType extends Document,
+    ModelType extends Model<DocType>
+  >(fields: any, mongoose: Mongoose): TinyMongooseSchemas<T, DocType, ModelType> {
     if (!fields.created_at) fields.created_at = { type: Date };
     if (!fields.updated_at) fields.updated_at = { type: Date };
-    return new TinyMongooseSchemas<T, DocType, ModelType>(new mongoose.Schema(fields));
+    return new TinyMongooseSchemas<T, DocType, ModelType>(new mongoose.Schema(fields), mongoose);
   }
   toModel(name: string): ModelType {
-    return <ModelType>mongoose.model<DocType>(name, this._schema);
+    return <ModelType>this._mongoose.model<DocType>(name, this._schema);
   }
   pre(
     action: string,
     funcs:
       | ((arg) => Promise<T>)[]
-      | ((next: (err?: mongoose.NativeError) => void) => void)
+      | ((next: (err?: NativeError) => void) => void)
   ) {
     if (Array.isArray(funcs)) {
       this._schema.pre(action, function(next) {
