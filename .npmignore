@@ -1,3 +1,4 @@
 src
 package-lock.json
 tsconfig.json
+lib/*.d.ts
