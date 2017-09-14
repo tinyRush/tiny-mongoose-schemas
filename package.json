@@ -1,0 +1,26 @@
+{
+  "name": "tiny-mongoose-schemas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {},
+  "keywords": [],
+  "author": {
+    "name": "tinyRush",
+    "email": "tinyrush.team@gmail.com"
+  },
+  "homepage": "https://github.com/tinyRush/tiny-mongoose-schemas#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tinyRush/tiny-mongoose-schemas.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "mongoose": "^4.11.11",
+    "tiny-promises": "^1.0.8"
+  },
+  "devDependencies": {
+    "@types/mongoose": "^4.7.21"
+  }
+}
