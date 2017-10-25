@@ -1,17 +1,16 @@
 import { Document, Model, Schema, Mongoose, NativeError } from 'mongoose';
 declare class TinyMongooseSchemas<
-  T,
-  DocType extends Document,
-  ModelType extends Model<DocType>
+  T extends Document,
+  ModelType extends Model<T>
 > {
   private _schema;
   private _mongoose;
   constructor(schema: Schema, mongoose: Mongoose);
   readonly schema: Schema;
-  static from<T, DocType extends Document, ModelType extends Model<DocType>>(
+  static from<T extends Document, ModelType extends Model<T>>(
     fields: any,
     mongoose: Mongoose
-  ): TinyMongooseSchemas<T, DocType, ModelType>;
+  ): TinyMongooseSchemas<T, ModelType>;
   toModel(name: string): ModelType;
   pre(
     action: string,

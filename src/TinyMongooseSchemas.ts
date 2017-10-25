@@ -2,9 +2,8 @@
 import { Document, Model, Schema, Mongoose, NativeError } from 'mongoose';
 
 class TinyMongooseSchemas<
-  T,
-  DocType extends Document,
-  ModelType extends Model<DocType>
+  T extends Document,
+  ModelType extends Model<T>
 > {
   private _schema: Schema;
   private _mongoose: Mongoose;
@@ -29,16 +28,15 @@ class TinyMongooseSchemas<
     return this._schema;
   }
   public static from<
-    T,
-    DocType extends Document,
-    ModelType extends Model<DocType>
-  >(fields: any, mongoose: Mongoose): TinyMongooseSchemas<T, DocType, ModelType> {
+    T extends Document,
+    ModelType extends Model<T>
+  >(fields: any, mongoose: Mongoose): TinyMongooseSchemas<T, ModelType> {
     if (!fields.created_at) fields.created_at = { type: Date };
     if (!fields.updated_at) fields.updated_at = { type: Date };
-    return new TinyMongooseSchemas<T, DocType, ModelType>(new mongoose.Schema(fields), mongoose);
+    return new TinyMongooseSchemas<T, ModelType>(new mongoose.Schema(fields), mongoose);
   }
   toModel(name: string): ModelType {
-    return <ModelType>this._mongoose.model<DocType>(name, this._schema);
+    return <ModelType>this._mongoose.model<T>(name, this._schema);
   }
   pre(
     action: string,
